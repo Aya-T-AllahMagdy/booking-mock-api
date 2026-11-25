@@ -1,6 +1,6 @@
 {
   "users": [
-    {"id": 1, "name": "Demo User", "email": "demo@am.app", "password": "123456", "phone": "+966500000000", "avatar": "https://i.pravatar.cc/150?img=12", "language": "en", "theme": "system"}
+    {"id": 1, "name": "Demo User", "email": "demo@am.app", "password": "123456", "phone": "+966500000000", "avatar": "https://i.pravatar.cc/150?img=12", "language": "en", "theme": "light"}
   ],
   "categories": [
     {"id": 1, "nameEn": "Beauty", "nameAr": "التجميل", "icon": "spa"},
