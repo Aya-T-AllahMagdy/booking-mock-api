@@ -3,7 +3,7 @@ info:
   title: Booking API
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: /
 components:
   securitySchemes:
     bearer: {type: http, scheme: bearer}
@@ -48,13 +48,13 @@ paths:
       requestBody: {content: {application/json: {schema: {type: object, properties: {email: {type: string}, password: {type: string}}}}}}
       responses: {'200': {description: "{user, accessToken, refreshToken}"}, '401': {description: Invalid credentials}}
   /auth/refresh:
-    post: {tags: [Auth], responses: {'200': {description: "{accessToken}"}}}
+    post: {tags: [Auth], requestBody: {content: {application/json: {schema: {type: object, properties: {refreshToken: {type: string, example: refresh-1}}}}}}, responses: {'200': {description: "{accessToken}"}, '401': {description: INVALID_REFRESH}}}
   /auth/forgot-password:
-    post: {tags: [Auth], responses: {'200': {description: OK}}}
+    post: {tags: [Auth], requestBody: {content: {application/json: {schema: {type: object, properties: {email: {type: string, example: demo@am.app}}}}}}, responses: {'200': {description: "{message}"}}}
   /auth/verify-otp:
-    post: {tags: [Auth], responses: {'200': {description: OK}}}
+    post: {tags: [Auth], requestBody: {content: {application/json: {schema: {type: object, properties: {email: {type: string, example: demo@am.app}, code: {type: string, example: '123456'}}}}}}, responses: {'200': {description: "{verified:true}"}, '400': {description: INVALID_OTP}}}
   /auth/reset-password:
-    post: {tags: [Auth], responses: {'200': {description: OK}}}
+    post: {tags: [Auth], requestBody: {content: {application/json: {schema: {type: object, properties: {email: {type: string, example: demo@am.app}, code: {type: string, example: '123456'}, newPassword: {type: string, example: '123456'}}}}}}, responses: {'200': {description: "{message}"}, '400': {description: INVALID_OTP or VALIDATION}}}
   /categories:
     get: {tags: [Catalog], responses: {'200': {description: OK, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/Category'}}}}}}}
   /services:
@@ -96,20 +96,27 @@ paths:
       responses: {'200': {description: OK}}
   /bookings/{id}:
     get: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: OK}}}
-    patch: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: Rescheduled or cancelled}}}
+    patch: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], requestBody: {content: {application/json: {schema: {type: object, properties: {status: {type: string, enum: [pending, confirmed, completed, cancelled], example: cancelled}, notes: {type: string}}}}}}, responses: {'200': {description: Updated (cancel frees the slot)}, '404': {description: Not found}, '409': {description: Completed booking cannot be cancelled}}}
   /bookings/{id}/review:
-    post: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'201': {description: Created}}}
+    post: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], requestBody: {content: {application/json: {schema: {type: object, required: [rating], properties: {rating: {type: integer, minimum: 1, maximum: 5, example: 5}, comment: {type: string, example: Great}}}}}}, responses: {'201': {description: Created}, '400': {description: VALIDATION}, '409': {description: ALREADY_REVIEWED}}}
   /promo/validate:
-    post: {tags: [Bookings], responses: {'200': {description: "{valid, discountPercent}"}}}
+    post: {tags: [Bookings], requestBody: {content: {application/json: {schema: {type: object, properties: {code: {type: string, example: WELCOME10}}}}}}, responses: {'200': {description: "{valid, discountPercent}"}}}
   /me:
-    get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
-    patch: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
+    get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}, '401': {description: UNAUTHENTICATED}}}
+    patch: {tags: [User], security: [{bearer: []}], requestBody: {content: {application/json: {schema: {type: object, properties: {language: {type: string, enum: [en, ar]}, theme: {type: string, enum: [light, dark, system]}, name: {type: string}, phone: {type: string}, avatar: {type: string}}}}}}, responses: {'200': {description: OK}, '400': {description: VALIDATION}}}
   /favorites:
     get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
-    post: {tags: [User], security: [{bearer: []}], responses: {'201': {description: Created}}}
+    post: {tags: [User], security: [{bearer: []}], requestBody: {content: {application/json: {schema: {type: object, properties: {serviceId: {type: integer, example: 1}}}}}}, responses: {'201': {description: Created}}}
   /favorites/{id}:
-    delete: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: Deleted}}}
+    delete: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'204': {description: Deleted}, '404': {description: Not found}}}
   /notifications:
     get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
   /notifications/{id}:
-    patch: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: OK}}}
+    patch: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], requestBody: {content: {application/json: {schema: {type: object, properties: {read: {type: boolean, example: true}}}}}}, responses: {'200': {description: OK}}}
+  /slots:
+    get:
+      tags: [Catalog]
+      parameters:
+        - {name: providerId, in: query, schema: {type: integer}}
+        - {name: date, in: query, schema: {type: string, format: date, example: '2026-12-01'}}
+      responses: {'200': {description: "[{providerId,date,time,available}]"}}
