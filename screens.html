@@ -25,7 +25,7 @@ body.dark{background:#070b09}
 .board{display:grid;grid-template-columns:repeat(auto-fill,380px);gap:48px 32px;padding:32px;justify-content:center}
 .item h3{font-size:14px;margin-bottom:6px;color:#333}
 body.dark .item h3{color:#ccc}
-.api{font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px;color:#444;background:#fff8;border-radius:8px;padding:8px;width:360px}
+.api{font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px;color:#444;background:#fff8;border-radius:8px;padding:8px;width:360px;white-space:pre-wrap;overflow-wrap:anywhere}
 body.dark .api{color:#bbb;background:#fff1}
 .phone{width:360px;height:740px;border-radius:36px;border:8px solid #111;overflow:hidden;position:relative;background:var(--bg);color:var(--text);box-shadow:0 12px 30px #0003}
 .rtl{direction:rtl}
@@ -90,6 +90,13 @@ const I18N = {
     settings:"Settings",language:"Language",theme:"Theme",light:"Light",dark:"Dark",system:"System",notifications:"Notifications",
     editProfile:"Edit profile",favorites:"Favorites",help:"Help & contact",logout:"Log out",currency:"SAR",min:"min",
     fullName:"Full name",saved:"Saved to your account",
+    forgotT:"Forgot password",forgotD:"Enter your email and we will send you a code.",sendCode:"Send code",
+    otpT:"Verify code",otpD:"Enter the 6-digit code sent to your email (demo: 123456).",verify:"Verify",resend:"Resend code",
+    newPass:"New password",newPassD:"Choose a new password (6+ characters).",confirmPass:"Confirm password",savePass:"Save password",
+    favEmpty:"No favorites yet",favEmptyD:"Tap the heart on a service to save it here.",
+    notifEmpty:"Booking confirmed",markRead:"Mark as read",today:"Today",
+    rateT:"Rate your experience",rateD:"How was your service?",comment:"Write a comment (optional)",submit:"Submit review",
+    editT:"Edit profile",save:"Save changes",
     s:{1:"Haircut & Styling",2:"Facial Treatment",3:"General Consultation"},p:{1:"Layla Hassan",2:"Omar Saleh"},c:{1:"Beauty",2:"Health",3:"Fitness",4:"Home"}},
   ar:{appName:"بوكلي",skip:"تخطي",next:"التالي",getStarted:"ابدأ الآن",ob1:"اعثر على أي خدمة",ob1d:"خدمات التجميل والصحة واللياقة والمنزل بالقرب منك.",
     login:"تسجيل الدخول",email:"البريد الإلكتروني",password:"كلمة المرور",forgot:"نسيت كلمة المرور؟",noAcc:"ليس لديك حساب؟ أنشئ حساباً",
@@ -105,6 +112,13 @@ const I18N = {
     settings:"الإعدادات",language:"اللغة",theme:"المظهر",light:"فاتح",dark:"داكن",system:"النظام",notifications:"الإشعارات",
     editProfile:"تعديل الملف الشخصي",favorites:"المفضلة",help:"المساعدة والتواصل",logout:"تسجيل الخروج",currency:"ر.س",min:"د",
     fullName:"الاسم الكامل",saved:"تم الحفظ في حسابك",
+    forgotT:"نسيت كلمة المرور",forgotD:"أدخل بريدك الإلكتروني وسنرسل لك رمزاً.",sendCode:"إرسال الرمز",
+    otpT:"التحقق من الرمز",otpD:"أدخل الرمز المكوّن من 6 أرقام المرسل إلى بريدك (تجريبي: 123456).",verify:"تحقق",resend:"إعادة إرسال الرمز",
+    newPass:"كلمة مرور جديدة",newPassD:"اختر كلمة مرور جديدة (6 أحرف على الأقل).",confirmPass:"تأكيد كلمة المرور",savePass:"حفظ كلمة المرور",
+    favEmpty:"لا توجد مفضلات بعد",favEmptyD:"اضغط على القلب في أي خدمة لحفظها هنا.",
+    notifEmpty:"تم تأكيد الحجز",markRead:"تحديد كمقروء",today:"اليوم",
+    rateT:"قيّم تجربتك",rateD:"كيف كانت الخدمة؟",comment:"اكتب تعليقاً (اختياري)",submit:"إرسال التقييم",
+    editT:"تعديل الملف الشخصي",save:"حفظ التغييرات",
     s:{1:"قص وتصفيف الشعر",2:"جلسة عناية بالوجه",3:"استشارة طبية عامة"},p:{1:"ليلى حسن",2:"عمر صالح"},c:{1:"التجميل",2:"الصحة",3:"اللياقة",4:"المنزل"}}
 };
 let lang='en';
@@ -137,7 +151,14 @@ function screens(){
   ['11 · My bookings','GET /bookings?userId=1&status=upcoming|completed|cancelled',phone(`<div class="body"><div class="h2">${t.bookings}</div><div class="seg"><div class="on">${t.upcomingTab}</div><div>${t.completedTab}</div><div>${t.cancelledTab}</div></div>${booking('confirmed',t.confirmed,1)}${booking('pending','Pending',2)}${booking('confirmed',t.confirmed,3)}</div>`,3)],
   ['12 · Booking details','GET /bookings/1\nPATCH /bookings/1 {date,time}  (reschedule)\nPATCH /bookings/1 {status:"cancelled"}\nPOST /bookings/1/review {rating,comment}',phone(`<div class="body">${bar(t.bookingDetails)}<div class="card center"><div class="img" style="width:120px;height:120px;display:grid;place-items:center;font-size:40px">▦</div><b>BK-1001</b><span class="status-chip s-confirmed">${t.confirmed}</span></div><div class="card">${[[t.service,t.s[1]],[t.provider,t.p[1]],[t.date,'2026-12-01'],[t.time,'10:00'],[t.total,'80 '+t.currency]].map(r=>`<div class="row between" style="padding:4px 0"><span class="muted">${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div><div class="grow"></div><div class="btn">${t.reschedule}</div><div class="btn danger">${t.cancel}</div></div>`)],
   ['13 · Profile','GET /me\nPATCH /me {name, phone, avatar}',phone(`<div class="body"><div class="center"><div class="avatar" style="width:84px;height:84px;font-size:40px">🙂</div><div class="h2">Demo User</div><div class="muted">demo@am.app</div></div>${[['✏️',t.editProfile],['♡',t.favorites],['🔔',t.notifications],['⚙️',t.settings],['❓',t.help]].map(r=>`<div class="card row"><span>${r[0]}</span><b class="grow" style="font-weight:500">${r[1]}</b><span class="muted">›</span></div>`).join('')}<div class="grow"></div><div class="btn danger">${t.logout}</div></div>`,4)],
-  ['14 · Settings (language + theme saved to API)','PATCH /me {language:"en"|"ar", theme:"light"|"dark"|"system"}\nGET /me on login → defaults en + light',phone(`<div class="body">${bar(t.settings)}<div class="card"><div class="label">${t.language}</div><div class="seg"><div class="${lang==='en'?'on':''}">English</div><div class="${lang==='ar'?'on':''}">العربية</div></div></div><div class="card"><div class="label">${t.theme}</div><div class="seg"><div class="${document.body.classList.contains('dark')?'':'on'}">${t.light}</div><div class="${document.body.classList.contains('dark')?'on':''}">${t.dark}</div><div>${t.system}</div></div></div><div class="card row between"><span>🔔 ${t.notifications}</span><div class="toggle"></div></div><div class="muted" style="text-align:center">✓ ${t.saved}</div></div>`)]
+  ['14 · Settings (language + theme saved to API)','PATCH /me {language:"en"|"ar", theme:"light"|"dark"|"system"}\nGET /me on login → defaults en + light',phone(`<div class="body">${bar(t.settings)}<div class="card"><div class="label">${t.language}</div><div class="seg"><div class="${lang==='en'?'on':''}">English</div><div class="${lang==='ar'?'on':''}">العربية</div></div></div><div class="card"><div class="label">${t.theme}</div><div class="seg"><div class="${document.body.classList.contains('dark')?'':'on'}">${t.light}</div><div class="${document.body.classList.contains('dark')?'on':''}">${t.dark}</div><div>${t.system}</div></div></div><div class="card row between"><span>🔔 ${t.notifications}</span><div class="toggle"></div></div><div class="muted" style="text-align:center">✓ ${t.saved}</div></div>`)],
+  ['15 · Forgot password','POST /auth/forgot-password {email}\n→ 200 {message}',phone(`<div class="body">${bar(t.forgotT)}<div class="muted">${t.forgotD}</div>${field(t.email,'demo@am.app')}<div class="grow"></div><div class="btn">${t.sendCode}</div></div>`)],
+  ['16 · Verify OTP','POST /auth/verify-otp {email, code}\n→ 200 {verified:true} · 400 INVALID_OTP\n(resend = POST /auth/forgot-password)',phone(`<div class="body">${bar(t.otpT)}<div class="muted">${t.otpD}</div><div class="otp"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="muted" style="text-align:center;color:var(--primary)">${t.resend}</div><div class="grow"></div><div class="btn">${t.verify}</div></div>`)],
+  ['17 · New password','POST /auth/reset-password\n{email, code, newPassword}\n→ 200 {message} · then go to Login',phone(`<div class="body">${bar(t.newPass)}<div class="muted">${t.newPassD}</div>${field(t.newPass,'')}${field(t.confirmPass,'')}<div class="grow"></div><div class="btn">${t.savePass}</div></div>`)],
+  ['18 · Favorites','GET /favorites → [{id, serviceId}]\nGET /services/{serviceId} for each card\nDELETE /favorites/{id} (tap heart)\nPOST /favorites {serviceId} (from heart on Home/Explore/Details)',phone(`<div class="body">${bar(t.favorites)}${svcCard(svc[0])}${svcCard(svc[2])}<div class="grow"></div><div class="center muted" style="padding:12px">♡ ${t.favEmptyD}<br>(${t.favEmpty})</div></div>`)],
+  ['19 · Notifications','GET /notifications\nPATCH /notifications/{id} {read:true}\n(use titleEn / titleAr by language)',phone(`<div class="body">${bar(t.notifications)}<div class="muted">${t.today}</div>${[0,1].map(i=>`<div class="card row" style="${i?'opacity:.6':''}"><div class="avatar">🔔</div><div class="grow"><b>${t.notifEmpty}</b><div class="muted">2026-11-24 10:00</div></div>${i?'':'<span style="color:var(--primary)">●</span>'}</div>`).join('')}<div class="muted" style="text-align:center;color:var(--primary)">${t.markRead}</div></div>`)],
+  ['20 · Rate service','POST /bookings/1/review\n{rating: 1-5, comment}\n→ 201 review · 409 ALREADY_REVIEWED',phone(`<div class="body">${bar(t.rateT)}<div class="center"><div class="avatar" style="width:72px;height:72px;font-size:32px">✂️</div><b>${t.s[1]}</b><div class="muted">${t.rateD}</div><div style="font-size:36px;letter-spacing:6px;color:var(--warning)">★★★★☆</div></div><div class="field" style="height:120px;align-items:flex-start;padding-top:14px">${t.comment}</div><div class="grow"></div><div class="btn">${t.submit}</div></div>`)],
+  ['21 · Edit profile','GET /me (prefill)\nPATCH /me {name, phone, avatar}\n→ 200 updated user',phone(`<div class="body">${bar(t.editT)}<div class="center"><div class="avatar" style="width:84px;height:84px;font-size:40px">🙂</div></div>${field(t.fullName,'Demo User')}${field(t.phone,'+966500000000')}${field(t.email,'demo@am.app',true)}<div class="grow"></div><div class="btn">${t.save}</div></div>`)]
   ];
 }
 
