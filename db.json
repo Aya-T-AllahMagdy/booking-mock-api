@@ -1,0 +1,47 @@
+{
+  "users": [
+    {"id": 1, "name": "Demo User", "email": "demo@am.app", "password": "123456", "phone": "+966500000000", "avatar": "https://i.pravatar.cc/150?img=12", "language": "en", "theme": "system"}
+  ],
+  "categories": [
+    {"id": 1, "nameEn": "Beauty", "nameAr": "التجميل", "icon": "spa"},
+    {"id": 2, "nameEn": "Health", "nameAr": "الصحة", "icon": "medical_services"},
+    {"id": 3, "nameEn": "Fitness", "nameAr": "اللياقة", "icon": "fitness_center"},
+    {"id": 4, "nameEn": "Home services", "nameAr": "الخدمات المنزلية", "icon": "home_repair_service"}
+  ],
+  "services": [
+    {"id": 1, "categoryId": 1, "titleEn": "Haircut & Styling", "titleAr": "قص وتصفيف الشعر", "descriptionEn": "Professional haircut and styling.", "descriptionAr": "قص وتصفيف احترافي للشعر.", "price": 80, "durationMin": 45, "rating": 4.8, "image": "https://picsum.photos/seed/hair/600/400"},
+    {"id": 2, "categoryId": 1, "titleEn": "Facial Treatment", "titleAr": "جلسة عناية بالوجه", "descriptionEn": "Deep cleansing facial.", "descriptionAr": "تنظيف عميق للبشرة.", "price": 150, "durationMin": 60, "rating": 4.6, "image": "https://picsum.photos/seed/facial/600/400"},
+    {"id": 3, "categoryId": 2, "titleEn": "General Consultation", "titleAr": "استشارة طبية عامة", "descriptionEn": "15-minute doctor consultation.", "descriptionAr": "استشارة مع طبيب لمدة 15 دقيقة.", "price": 120, "durationMin": 15, "rating": 4.9, "image": "https://picsum.photos/seed/doctor/600/400"},
+    {"id": 4, "categoryId": 3, "titleEn": "Personal Training", "titleAr": "تدريب شخصي", "descriptionEn": "One-on-one training session.", "descriptionAr": "جلسة تدريب فردية.", "price": 100, "durationMin": 60, "rating": 4.7, "image": "https://picsum.photos/seed/gym/600/400"},
+    {"id": 5, "categoryId": 4, "titleEn": "AC Maintenance", "titleAr": "صيانة المكيفات", "descriptionEn": "Cleaning and checkup.", "descriptionAr": "تنظيف وفحص المكيف.", "price": 90, "durationMin": 60, "rating": 4.5, "image": "https://picsum.photos/seed/ac/600/400"}
+  ],
+  "providers": [
+    {"id": 1, "serviceId": 1, "nameEn": "Layla Hassan", "nameAr": "ليلى حسن", "rating": 4.9, "avatar": "https://i.pravatar.cc/150?img=47"},
+    {"id": 2, "serviceId": 1, "nameEn": "Omar Saleh", "nameAr": "عمر صالح", "rating": 4.7, "avatar": "https://i.pravatar.cc/150?img=33"},
+    {"id": 3, "serviceId": 2, "nameEn": "Nora Ali", "nameAr": "نورة علي", "rating": 4.8, "avatar": "https://i.pravatar.cc/150?img=45"},
+    {"id": 4, "serviceId": 3, "nameEn": "Dr. Khalid Nasser", "nameAr": "د. خالد ناصر", "rating": 4.9, "avatar": "https://i.pravatar.cc/150?img=15"},
+    {"id": 5, "serviceId": 4, "nameEn": "Sami Fahad", "nameAr": "سامي فهد", "rating": 4.6, "avatar": "https://i.pravatar.cc/150?img=52"},
+    {"id": 6, "serviceId": 5, "nameEn": "CoolFix Team", "nameAr": "فريق كول فكس", "rating": 4.4, "avatar": "https://i.pravatar.cc/150?img=60"}
+  ],
+  "slots": [
+    {"id": 1, "providerId": 1, "date": "2026-12-01", "time": "09:00", "available": true},
+    {"id": 2, "providerId": 1, "date": "2026-12-01", "time": "10:00", "available": false},
+    {"id": 3, "providerId": 1, "date": "2026-12-01", "time": "11:00", "available": true},
+    {"id": 4, "providerId": 1, "date": "2026-12-01", "time": "13:00", "available": true},
+    {"id": 5, "providerId": 2, "date": "2026-12-01", "time": "09:30", "available": true},
+    {"id": 6, "providerId": 2, "date": "2026-12-01", "time": "12:00", "available": true}
+  ],
+  "bookings": [
+    {"id": 1, "userId": 1, "serviceId": 1, "providerId": 1, "date": "2026-12-01", "time": "10:00", "status": "confirmed", "notes": "", "price": 80, "paymentMethod": "card", "code": "BK-1001"}
+  ],
+  "reviews": [
+    {"id": 1, "providerId": 1, "userId": 1, "rating": 5, "comment": "Great service!", "createdAt": "2026-11-20"}
+  ],
+  "favorites": [],
+  "notifications": [
+    {"id": 1, "userId": 1, "titleEn": "Booking confirmed", "titleAr": "تم تأكيد الحجز", "read": false, "createdAt": "2026-11-24T10:00:00Z"}
+  ],
+  "promo": [
+    {"id": 1, "code": "WELCOME10", "discountPercent": 10}
+  ]
+}

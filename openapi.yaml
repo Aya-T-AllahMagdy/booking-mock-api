@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Booking API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    bearer: {type: http, scheme: bearer}
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties: {code: {type: string}, message: {type: string}}
+    User:
+      type: object
+      properties: {id: {type: integer}, name: {type: string}, email: {type: string}, phone: {type: string}, avatar: {type: string}, language: {type: string}, theme: {type: string}}
+    Category:
+      type: object
+      properties: {id: {type: integer}, nameEn: {type: string}, nameAr: {type: string}, icon: {type: string}}
+    Service:
+      type: object
+      properties: {id: {type: integer}, categoryId: {type: integer}, titleEn: {type: string}, titleAr: {type: string}, descriptionEn: {type: string}, descriptionAr: {type: string}, price: {type: number}, durationMin: {type: integer}, rating: {type: number}, image: {type: string}}
+    Provider:
+      type: object
+      properties: {id: {type: integer}, serviceId: {type: integer}, nameEn: {type: string}, nameAr: {type: string}, rating: {type: number}, avatar: {type: string}}
+    Slot:
+      type: object
+      properties: {time: {type: string}, available: {type: boolean}}
+    Booking:
+      type: object
+      properties: {id: {type: integer}, userId: {type: integer}, serviceId: {type: integer}, providerId: {type: integer}, date: {type: string, format: date}, time: {type: string}, status: {type: string, enum: [pending, confirmed, completed, cancelled]}, notes: {type: string}, price: {type: number}, paymentMethod: {type: string}, code: {type: string}}
+    BookingCreate:
+      type: object
+      required: [serviceId, providerId, date, time]
+      properties: {serviceId: {type: integer}, providerId: {type: integer}, date: {type: string, format: date}, time: {type: string}, notes: {type: string}, promoCode: {type: string}, paymentMethod: {type: string}}
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      requestBody: {content: {application/json: {schema: {type: object, properties: {name: {type: string}, phone: {type: string}, email: {type: string}, password: {type: string}}}}}}
+      responses: {'201': {description: Created}}
+  /auth/login:
+    post:
+      tags: [Auth]
+      requestBody: {content: {application/json: {schema: {type: object, properties: {email: {type: string}, password: {type: string}}}}}}
+      responses: {'200': {description: "{user, accessToken, refreshToken}"}, '401': {description: Invalid credentials}}
+  /auth/refresh:
+    post: {tags: [Auth], responses: {'200': {description: "{accessToken}"}}}
+  /auth/forgot-password:
+    post: {tags: [Auth], responses: {'200': {description: OK}}}
+  /auth/verify-otp:
+    post: {tags: [Auth], responses: {'200': {description: OK}}}
+  /auth/reset-password:
+    post: {tags: [Auth], responses: {'200': {description: OK}}}
+  /categories:
+    get: {tags: [Catalog], responses: {'200': {description: OK, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/Category'}}}}}}}
+  /services:
+    get:
+      tags: [Catalog]
+      parameters:
+        - {name: categoryId, in: query, schema: {type: integer}}
+        - {name: q, in: query, schema: {type: string}}
+        - {name: _page, in: query, schema: {type: integer}}
+        - {name: _limit, in: query, schema: {type: integer}}
+      responses: {'200': {description: OK, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/Service'}}}}}}
+  /services/{id}:
+    get:
+      tags: [Catalog]
+      parameters: [{name: id, in: path, required: true, schema: {type: integer}}]
+      responses: {'200': {description: OK}, '404': {description: Not found}}
+  /providers:
+    get:
+      tags: [Catalog]
+      parameters: [{name: serviceId, in: query, schema: {type: integer}}]
+      responses: {'200': {description: OK}}
+  /providers/{id}/slots:
+    get:
+      tags: [Catalog]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: integer}}
+        - {name: date, in: query, required: true, schema: {type: string, format: date}}
+      responses: {'200': {description: OK, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/Slot'}}}}}}
+  /bookings:
+    post:
+      tags: [Bookings]
+      security: [{bearer: []}]
+      requestBody: {content: {application/json: {schema: {$ref: '#/components/schemas/BookingCreate'}}}}
+      responses: {'201': {description: Created}, '409': {description: Slot taken}}
+    get:
+      tags: [Bookings]
+      security: [{bearer: []}]
+      parameters: [{name: status, in: query, schema: {type: string}}]
+      responses: {'200': {description: OK}}
+  /bookings/{id}:
+    get: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: OK}}}
+    patch: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: Rescheduled or cancelled}}}
+  /bookings/{id}/review:
+    post: {tags: [Bookings], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'201': {description: Created}}}
+  /promo/validate:
+    post: {tags: [Bookings], responses: {'200': {description: "{valid, discountPercent}"}}}
+  /me:
+    get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
+    patch: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
+  /favorites:
+    get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
+    post: {tags: [User], security: [{bearer: []}], responses: {'201': {description: Created}}}
+  /favorites/{id}:
+    delete: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: Deleted}}}
+  /notifications:
+    get: {tags: [User], security: [{bearer: []}], responses: {'200': {description: OK}}}
+  /notifications/{id}:
+    patch: {tags: [User], security: [{bearer: []}], parameters: [{name: id, in: path, required: true, schema: {type: integer}}], responses: {'200': {description: OK}}}
