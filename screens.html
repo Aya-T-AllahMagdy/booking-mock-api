@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking App – Screen Designs</title>
+<style>
+:root{
+  --primary:#0C7A5B;--onPrimary:#FFFFFF;--bg:#F7F9F8;--surface:#FFFFFF;
+  --text:#0B1F18;--text2:#5C6F67;--border:#DCE8E4;--success:#1B9E5A;--warning:#E8A317;--error:#D64545;
+  --tint:#E7F3EE;
+}
+body.dark{
+  --primary:#3DDC97;--onPrimary:#00251A;--bg:#0E1512;--surface:#17211C;
+  --text:#E8F3EE;--text2:#9DB3A9;--border:#27362F;--success:#3DDC97;--warning:#F2B84B;--error:#FF7A7A;
+  --tint:#1C2B24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Cairo","Inter",system-ui,sans-serif;background:#d9dfdc;color:#222;padding:0 0 60px}
+body.dark{background:#070b09}
+.toolbar{position:sticky;top:0;z-index:10;background:#111;color:#fff;padding:12px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.toolbar b{margin-inline-end:auto}
+.toolbar button{background:#2a2a2a;color:#fff;border:0;border-radius:20px;padding:8px 16px;cursor:pointer;font:inherit}
+.toolbar button.on{background:#3DDC97;color:#00251A}
+.board{display:grid;grid-template-columns:repeat(auto-fill,380px);gap:48px 32px;padding:32px;justify-content:center}
+.item h3{font-size:14px;margin-bottom:6px;color:#333}
+body.dark .item h3{color:#ccc}
+.api{font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px;color:#444;background:#fff8;border-radius:8px;padding:8px;width:360px}
+body.dark .api{color:#bbb;background:#fff1}
+.phone{width:360px;height:740px;border-radius:36px;border:8px solid #111;overflow:hidden;position:relative;background:var(--bg);color:var(--text);box-shadow:0 12px 30px #0003}
+.rtl{direction:rtl}
+.scr{height:100%;display:flex;flex-direction:column}
+.status{height:28px;font-size:11px;display:flex;justify-content:space-between;padding:8px 18px 0;color:var(--text2)}
+.body{flex:1;overflow:hidden;padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.appbar{display:flex;align-items:center;gap:8px;font-weight:700;font-size:18px;padding:4px 0}
+.appbar .back{width:36px;height:36px;border-radius:12px;background:var(--surface);border:1px solid var(--border);display:grid;place-items:center;font-size:14px}
+.rtl .back{transform:scaleX(-1)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px}
+.btn{background:var(--primary);color:var(--onPrimary);border-radius:14px;height:48px;display:grid;place-items:center;font-weight:700}
+.btn.out{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
+.btn.danger{background:transparent;color:var(--error);border:1.5px solid var(--error)}
+.field{background:var(--surface);border:1px solid var(--border);border-radius:14px;height:48px;display:flex;align-items:center;padding:0 14px;color:var(--text2);font-size:14px;gap:8px}
+.field.ro{background:var(--tint)}
+.label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.title{font-size:28px;font-weight:700}.h2{font-size:20px;font-weight:600}
+.muted{color:var(--text2);font-size:13px}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}
+.chip{border-radius:20px;padding:6px 14px;font-size:13px;border:1px solid var(--border);background:var(--surface);white-space:nowrap}
+.chip.sel{background:var(--primary);color:var(--onPrimary);border-color:var(--primary)}
+.chip.dis{opacity:.4;text-decoration:line-through}
+.status-chip{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}
+.s-confirmed{background:#1B9E5A22;color:var(--success)}.s-pending{background:#E8A31722;color:var(--warning)}.s-cancelled{background:#D6454522;color:var(--error)}.s-completed{background:var(--tint);color:var(--primary)}
+.img{border-radius:12px;background:linear-gradient(135deg,var(--primary),#7fd6b4);opacity:.85;flex:none}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--tint);display:grid;place-items:center;font-size:20px;flex:none}
+.nav{height:64px;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;font-size:11px;color:var(--text2)}
+.nav div{display:grid;place-items:center;gap:2px}.nav .on{color:var(--primary);font-weight:700}
+.nav span{font-size:20px}
+.scroll{display:flex;gap:8px;overflow:hidden}
+.sticky{padding:12px 16px;background:var(--surface);border-top:1px solid var(--border)}
+.center{display:grid;place-items:center;text-align:center;gap:12px}
+.grow{flex:1}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:8px;height:8px;border-radius:4px;background:var(--border)}.dots i.on{width:24px;background:var(--primary)}
+.otp{display:flex;gap:8px;justify-content:center}.otp i{width:40px;height:48px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.toggle{width:44px;height:26px;border-radius:13px;background:var(--primary);position:relative}.toggle:after{content:"";position:absolute;top:3px;inset-inline-end:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+.seg{display:flex;background:var(--tint);border-radius:12px;padding:3px}.seg div{flex:1;text-align:center;padding:7px;border-radius:10px;font-size:13px}.seg .on{background:var(--primary);color:var(--onPrimary);font-weight:700}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <b>Booking App · Screen designs (matches booking-mock-api)</b>
+  <button id="bLight" class="on">Light</button><button id="bDark">Dark</button>
+  <button id="bEn" class="on">EN</button><button id="bAr">AR</button>
+</div>
+<div class="board" id="board"></div>
+
+<script>
+// Strings (same keys → put into app_en.arb / app_ar.arb)
+const I18N = {
+  en:{appName:"Bookly",skip:"Skip",next:"Next",getStarted:"Get started",ob1:"Find any service",ob1d:"Beauty, health, fitness and home services near you.",
+    login:"Log in",email:"Email",password:"Password",forgot:"Forgot password?",noAcc:"Don't have an account? Create one",
+    register:"Create account",name:"Full name",phone:"Phone",terms:"I agree to the terms",haveAcc:"Already have an account? Log in",
+    hello:"Hello",findService:"Find a service",categories:"Categories",popular:"Popular services",upcoming:"Upcoming booking",seeAll:"See all",
+    home:"Home",explore:"Explore",bookings:"Bookings",profile:"Profile",search:"Search services",filters:"Filters",
+    book:"Book now",about:"About",providers:"Providers",selectProvider:"Select provider",selectDate:"Select date",selectTime:"Select time",
+    summary:"Booking summary",service:"Service",provider:"Provider",date:"Date",time:"Time",notes:"Notes (optional)",promo:"Promo code",apply:"Apply",
+    total:"Total",discount:"Discount",confirm:"Confirm booking",payment:"Payment method",card:"Card",cash:"Cash",
+    success:"Booking confirmed!",successD:"Your booking number is",viewBooking:"View booking",
+    upcomingTab:"Upcoming",completedTab:"Completed",cancelledTab:"Cancelled",confirmed:"Confirmed",completed:"Completed",cancelled:"Cancelled",
+    reschedule:"Reschedule",cancel:"Cancel booking",rate:"Rate service",bookingDetails:"Booking details",
+    settings:"Settings",language:"Language",theme:"Theme",light:"Light",dark:"Dark",system:"System",notifications:"Notifications",
+    editProfile:"Edit profile",favorites:"Favorites",help:"Help & contact",logout:"Log out",currency:"SAR",min:"min",
+    fullName:"Full name",saved:"Saved to your account",
+    s:{1:"Haircut & Styling",2:"Facial Treatment",3:"General Consultation"},p:{1:"Layla Hassan",2:"Omar Saleh"},c:{1:"Beauty",2:"Health",3:"Fitness",4:"Home"}},
+  ar:{appName:"بوكلي",skip:"تخطي",next:"التالي",getStarted:"ابدأ الآن",ob1:"اعثر على أي خدمة",ob1d:"خدمات التجميل والصحة واللياقة والمنزل بالقرب منك.",
+    login:"تسجيل الدخول",email:"البريد الإلكتروني",password:"كلمة المرور",forgot:"نسيت كلمة المرور؟",noAcc:"ليس لديك حساب؟ أنشئ حساباً",
+    register:"إنشاء حساب",name:"الاسم الكامل",phone:"الجوال",terms:"أوافق على الشروط",haveAcc:"لديك حساب؟ سجّل الدخول",
+    hello:"مرحباً",findService:"ابحث عن خدمة",categories:"التصنيفات",popular:"الخدمات الشائعة",upcoming:"حجزك القادم",seeAll:"عرض الكل",
+    home:"الرئيسية",explore:"استكشف",bookings:"حجوزاتي",profile:"حسابي",search:"ابحث عن خدمة",filters:"تصفية",
+    book:"احجز الآن",about:"نبذة",providers:"مقدمو الخدمة",selectProvider:"اختر مقدم الخدمة",selectDate:"اختر التاريخ",selectTime:"اختر الوقت",
+    summary:"ملخص الحجز",service:"الخدمة",provider:"مقدم الخدمة",date:"التاريخ",time:"الوقت",notes:"ملاحظات (اختياري)",promo:"رمز الخصم",apply:"تطبيق",
+    total:"الإجمالي",discount:"الخصم",confirm:"تأكيد الحجز",payment:"طريقة الدفع",card:"بطاقة",cash:"نقداً",
+    success:"تم تأكيد الحجز!",successD:"رقم حجزك",viewBooking:"عرض الحجز",
+    upcomingTab:"القادمة",completedTab:"المكتملة",cancelledTab:"الملغاة",confirmed:"مؤكد",completed:"مكتمل",cancelled:"ملغي",
+    reschedule:"إعادة جدولة",cancel:"إلغاء الحجز",rate:"قيّم الخدمة",bookingDetails:"تفاصيل الحجز",
+    settings:"الإعدادات",language:"اللغة",theme:"المظهر",light:"فاتح",dark:"داكن",system:"النظام",notifications:"الإشعارات",
+    editProfile:"تعديل الملف الشخصي",favorites:"المفضلة",help:"المساعدة والتواصل",logout:"تسجيل الخروج",currency:"ر.س",min:"د",
+    fullName:"الاسم الكامل",saved:"تم الحفظ في حسابك",
+    s:{1:"قص وتصفيف الشعر",2:"جلسة عناية بالوجه",3:"استشارة طبية عامة"},p:{1:"ليلى حسن",2:"عمر صالح"},c:{1:"التجميل",2:"الصحة",3:"اللياقة",4:"المنزل"}}
+};
+let lang='en';
+const T=()=>I18N[lang];
+const svc=[{id:1,price:80,dur:45,rate:4.8,cat:1},{id:2,price:150,dur:60,rate:4.6,cat:1},{id:3,price:120,dur:15,rate:4.9,cat:2}];
+const ic=['✂️','💆','🩺','🏋️','🔧'];
+
+const phone=(inner,nav)=>`<div class="phone ${lang==='ar'?'rtl':''}"><div class="scr"><div class="status"><span>9:41</span><span>●●● 5G</span></div>${inner}${nav?navbar(nav):''}</div></div>`;
+const navbar=a=>{const t=T();const it=[['🏠',t.home],['🔍',t.explore],['📅',t.bookings],['👤',t.profile]];return `<div class="nav">${it.map((x,i)=>`<div class="${i===a-1?'on':''}"><span>${x[0]}</span>${x[1]}</div>`).join('')}</div>`};
+const bar=(title,right='')=>`<div class="appbar"><div class="back">◀</div><span class="grow">${title}</span>${right}</div>`;
+const field=(l,v,ro)=>`<div><div class="label">${l}</div><div class="field ${ro?'ro':''}">${v}</div></div>`;
+const svcCard=s=>{const t=T();return `<div class="card row"><div class="img" style="width:72px;height:72px;display:grid;place-items:center;font-size:30px">${ic[s.id-1]}</div><div class="grow"><b>${t.s[s.id]}</b><div class="muted">⭐ ${s.rate} · ${s.dur} ${t.min}</div><div style="color:var(--primary);font-weight:700">${s.price} ${t.currency}</div></div><span>♡</span></div>`};
+const days=()=>['1','2','3','4','5'].map((d,i)=>`<div class="chip ${i===1?'sel':''}" style="text-align:center;padding:8px 12px"><div style="font-size:11px">${lang==='ar'?['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'][i]:['Sun','Mon','Tue','Wed','Thu'][i]}</div><b>${d}</b></div>`).join('');
+const slots=()=>['09:00','10:00','11:00','13:00','14:30','16:00'].map((s,i)=>`<div class="chip ${i===0?'sel':''} ${i===1?'dis':''}">${s}</div>`).join('');
+const booking=(st,label,id)=>{const t=T();return `<div class="card"><div class="row between"><b>${t.s[id]}</b><span class="status-chip s-${st}">${label}</span></div><div class="muted" style="margin:6px 0">${t.p[1]} · 2026-12-01 · 10:00</div><div class="row between"><span class="muted">BK-1001</span><b style="color:var(--primary)">80 ${t.currency}</b></div></div>`};
+
+function screens(){
+  const t=T();
+  return [
+  ['1 · Splash','—',phone(`<div class="body center grow"><div class="avatar" style="width:96px;height:96px;font-size:44px;background:var(--primary)">📅</div><div class="title">${t.appName}</div></div>`)],
+  ['2 · Onboarding','—',phone(`<div class="body"><div class="row between"><span></span><span class="muted">${t.skip}</span></div><div class="center grow"><div class="img" style="width:240px;height:240px;border-radius:32px;display:grid;place-items:center;font-size:90px">🗓️</div><div class="title" style="font-size:24px">${t.ob1}</div><div class="muted">${t.ob1d}</div><div class="dots"><i class="on"></i><i></i><i></i></div></div><div class="btn">${t.next}</div></div>`)],
+  ['3 · Login','POST /auth/login\n{email, password}\n→ {user{language,theme}, accessToken, refreshToken}\nthen apply user.language / user.theme',phone(`<div class="body"><div style="height:24px"></div><div class="title">${t.login}</div><div class="muted">demo@am.app / 123456</div>${field(t.email,'demo@am.app')}${field(t.password,'••••••  👁')}<div style="color:var(--primary);font-size:13px">${t.forgot}</div><div class="btn">${t.login}</div><div class="grow"></div><div class="muted" style="text-align:center;color:var(--primary)">${t.noAcc}</div></div>`)],
+  ['4 · Register','POST /auth/register\n{name, phone, email, password}\n→ 201 {user (en/light default), accessToken}',phone(`<div class="body">${bar(t.register)}${field(t.name,'')}${field(t.phone,'+966')}${field(t.email,'')}${field(t.password,'')}<div class="row"><div class="chip sel" style="padding:4px 8px">✓</div><span class="muted">${t.terms}</span></div><div class="btn">${t.register}</div><div class="muted" style="text-align:center;color:var(--primary)">${t.haveAcc}</div></div>`)],
+  ['5 · Home','GET /me → greeting\nGET /categories\nGET /services?_limit=5&_sort=rating&_order=desc\nGET /bookings?status=upcoming&_limit=1',phone(`<div class="body"><div class="row between"><div><div class="muted">${t.hello} 👋</div><div class="h2">Demo User</div></div><div class="avatar">🙂</div></div><div class="field">🔍 ${t.findService}</div><div class="row between"><b>${t.categories}</b><span class="muted">${t.seeAll}</span></div><div class="scroll">${[1,2,3,4].map((c,i)=>`<div class="chip ${i===0?'sel':''}">${t.c[c]}</div>`).join('')}</div><div class="row between"><b>${t.popular}</b><span class="muted">${t.seeAll}</span></div>${svcCard(svc[0])}${svcCard(svc[2])}<b>${t.upcoming}</b>${booking('confirmed',t.confirmed,1)}</div>`,1)],
+  ['6 · Explore + filters','GET /services?q=hair&categoryId=1\n&minPrice…&rating_gte=4.5\n&_sort=price&_order=asc&_page=1&_limit=10',phone(`<div class="body"><div class="row"><div class="field grow">🔍 ${t.search}</div><div class="avatar" style="border-radius:14px">⚙️</div></div><div class="scroll">${[1,2,3,4].map((c,i)=>`<div class="chip ${i===0?'sel':''}">${t.c[c]}</div>`).join('')}</div>${svcCard(svc[0])}${svcCard(svc[1])}${svcCard(svc[2])}</div>`,2)],
+  ['7 · Service details','GET /services/1\nGET /providers?serviceId=1',phone(`<div class="body" style="padding:0"><div class="img" style="height:220px;border-radius:0;display:grid;place-items:center;font-size:80px">✂️</div><div style="padding:0 16px;display:flex;flex-direction:column;gap:10px"><div class="row between"><div class="h2">${t.s[1]}</div><span>♡</span></div><div class="muted">⭐ 4.8 · 45 ${t.min}</div><b>${t.about}</b><div class="muted">${lang==='ar'?'قص وتصفيف احترافي للشعر.':'Professional haircut and styling.'}</div><b>${t.providers}</b><div class="row"><div class="avatar">👩</div><div class="avatar">👨</div></div></div></div><div class="sticky row between"><div><div class="muted">${t.total}</div><b style="color:var(--primary);font-size:20px">80 ${t.currency}</b></div><div class="btn" style="width:160px">${t.book}</div></div>`)],
+  ['8 · Provider · date · time','GET /providers?serviceId=1\nGET /slots?providerId=1&date=2026-12-01\n(available:false → disabled chip)',phone(`<div class="body">${bar(t.selectProvider)}${[1,2].map((p,i)=>`<div class="card row" style="${i===0?'border-color:var(--primary)':''}"><div class="avatar">${i?'👨':'👩'}</div><div class="grow"><b>${t.p[p]}</b><div class="muted">⭐ ${i?4.7:4.9}</div></div>${i===0?'<span style="color:var(--primary)">●</span>':'<span class="muted">○</span>'}</div>`).join('')}<b>${t.selectDate}</b><div class="scroll">${days()}</div><b>${t.selectTime}</b><div class="row" style="flex-wrap:wrap">${slots()}</div><div class="grow"></div><div class="btn">${t.next}</div></div>`)],
+  ['9 · Summary + payment','POST /promo/validate {code}\nPOST /bookings\n{serviceId, providerId, date, time, notes, promoCode, paymentMethod}\n→ 201 booking {code:"BK-…"} · 409 SLOT_TAKEN',phone(`<div class="body">${bar(t.summary)}<div class="card">${[[t.service,t.s[1]],[t.provider,t.p[1]],[t.date,'2026-12-01'],[t.time,'09:00']].map(r=>`<div class="row between" style="padding:4px 0"><span class="muted">${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>${field(t.notes,'')}<div class="row"><div class="field grow">WELCOME10</div><div class="btn" style="width:90px">${t.apply}</div></div><b>${t.payment}</b><div class="card row between"><span>💳 ${t.card}</span><span style="color:var(--primary)">●</span></div><div class="card row between"><span>💵 ${t.cash}</span><span class="muted">○</span></div><div class="card"><div class="row between"><span class="muted">${t.discount} 10%</span><span>-8 ${t.currency}</span></div><div class="row between"><b>${t.total}</b><b style="color:var(--primary)">72 ${t.currency}</b></div></div><div class="grow"></div><div class="btn">${t.confirm}</div></div>`)],
+  ['10 · Success','response of POST /bookings → code',phone(`<div class="body center grow"><div class="avatar" style="width:96px;height:96px;font-size:48px;background:var(--primary);color:var(--onPrimary)">✓</div><div class="h2">${t.success}</div><div class="muted">${t.successD} <b>BK-1002</b></div><div class="btn" style="width:100%">${t.viewBooking}</div><div class="btn out" style="width:100%">${t.home}</div></div>`)],
+  ['11 · My bookings','GET /bookings?userId=1&status=upcoming|completed|cancelled',phone(`<div class="body"><div class="h2">${t.bookings}</div><div class="seg"><div class="on">${t.upcomingTab}</div><div>${t.completedTab}</div><div>${t.cancelledTab}</div></div>${booking('confirmed',t.confirmed,1)}${booking('pending','Pending',2)}${booking('confirmed',t.confirmed,3)}</div>`,3)],
+  ['12 · Booking details','GET /bookings/1\nPATCH /bookings/1 {date,time}  (reschedule)\nPATCH /bookings/1 {status:"cancelled"}\nPOST /bookings/1/review {rating,comment}',phone(`<div class="body">${bar(t.bookingDetails)}<div class="card center"><div class="img" style="width:120px;height:120px;display:grid;place-items:center;font-size:40px">▦</div><b>BK-1001</b><span class="status-chip s-confirmed">${t.confirmed}</span></div><div class="card">${[[t.service,t.s[1]],[t.provider,t.p[1]],[t.date,'2026-12-01'],[t.time,'10:00'],[t.total,'80 '+t.currency]].map(r=>`<div class="row between" style="padding:4px 0"><span class="muted">${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div><div class="grow"></div><div class="btn">${t.reschedule}</div><div class="btn danger">${t.cancel}</div></div>`)],
+  ['13 · Profile','GET /me\nPATCH /me {name, phone, avatar}',phone(`<div class="body"><div class="center"><div class="avatar" style="width:84px;height:84px;font-size:40px">🙂</div><div class="h2">Demo User</div><div class="muted">demo@am.app</div></div>${[['✏️',t.editProfile],['♡',t.favorites],['🔔',t.notifications],['⚙️',t.settings],['❓',t.help]].map(r=>`<div class="card row"><span>${r[0]}</span><b class="grow" style="font-weight:500">${r[1]}</b><span class="muted">›</span></div>`).join('')}<div class="grow"></div><div class="btn danger">${t.logout}</div></div>`,4)],
+  ['14 · Settings (language + theme saved to API)','PATCH /me {language:"en"|"ar", theme:"light"|"dark"|"system"}\nGET /me on login → defaults en + light',phone(`<div class="body">${bar(t.settings)}<div class="card"><div class="label">${t.language}</div><div class="seg"><div class="${lang==='en'?'on':''}">English</div><div class="${lang==='ar'?'on':''}">العربية</div></div></div><div class="card"><div class="label">${t.theme}</div><div class="seg"><div class="${document.body.classList.contains('dark')?'':'on'}">${t.light}</div><div class="${document.body.classList.contains('dark')?'on':''}">${t.dark}</div><div>${t.system}</div></div></div><div class="card row between"><span>🔔 ${t.notifications}</span><div class="toggle"></div></div><div class="muted" style="text-align:center">✓ ${t.saved}</div></div>`)]
+  ];
+}
+
+function render(){
+  document.documentElement.lang=lang;
+  document.getElementById('board').innerHTML=screens().map(s=>`<div class="item"><h3>${s[0]}</h3>${s[2]}<pre class="api">${s[1]}</pre></div>`).join('');
+}
+const setBtn=(a,b,on)=>{a.classList.toggle('on',on);b.classList.toggle('on',!on)};
+bLight.onclick=()=>{document.body.classList.remove('dark');setBtn(bLight,bDark,true);render()};
+bDark.onclick=()=>{document.body.classList.add('dark');setBtn(bDark,bLight,true);render()};
+bEn.onclick=()=>{lang='en';setBtn(bEn,bAr,true);render()};
+bAr.onclick=()=>{lang='ar';setBtn(bAr,bEn,true);render()};
+render();
+</script>
+</body>
+</html>
