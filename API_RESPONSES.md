@@ -59,3 +59,17 @@ Flutter flow: after login read `user.language/theme` and apply; when the user ch
 - Search/paging/sort come from json-server: `?q=hair&_page=1&_limit=10&_sort=price&_order=asc`
 
 Not implemented in this mock (see API_SPEC.md): `/auth/refresh`, OTP / password reset, `/promo/validate`, slot-conflict (409) checking. The token is a demo string, not a real JWT.
+
+## Added endpoints (all tested)
+| Call | Success | Errors |
+|---|---|---|
+| `POST /auth/refresh` `{refreshToken}` | 200 `{accessToken}` | 401 INVALID_REFRESH |
+| `POST /auth/forgot-password` `{email}` | 200 `{message}` | 400 VALIDATION |
+| `POST /auth/verify-otp` `{email, code}` | 200 `{verified:true}` | 400 INVALID_OTP (demo code is always `123456`) |
+| `POST /auth/reset-password` `{email, code, newPassword}` | 200 `{message}` | 400 INVALID_OTP / VALIDATION, 404 |
+| `POST /promo/validate` `{code}` | 200 `{valid, discountPercent}` (`WELCOME10` = 10%) | – |
+| `POST /bookings` (auth) `{serviceId, providerId, date, time, notes?, paymentMethod?, promoCode?}` | 201 booking (price after promo, `code` BK-xxxx, slot becomes unavailable) | 400, 404, **409 SLOT_TAKEN** |
+| `PATCH /bookings/{id}` (auth) `{status:"cancelled"}` | 200 booking (slot freed again) | 404, 409 if completed |
+| `POST /bookings/{id}/review` (auth) `{rating 1-5, comment}` | 201 review | 400, 409 ALREADY_REVIEWED |
+| `GET/POST /favorites`, `DELETE /favorites/{id}` (auth) | 200 / 201 / 204 | 401, 404 |
+| `GET /notifications`, `PATCH /notifications/{id}` `{read}` (auth) | 200 | 401, 404 |
